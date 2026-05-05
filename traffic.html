@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Traffic Monitor – uCampus++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="traffic.css">
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <!-- <nav class="navbar">
+    <div class="nav-left">
+      <a href="home.html" class="back-btn">←</a>
+      <a href="home.html" class="nav-logo">
+        <div class="nav-logo-icon">🎓</div>
+        <span>uCampus++</span>
+      </a>
+      <span class="nav-title">🚦 Traffic Monitor</span>
+    </div>
+    <div class="nav-right">
+      <div class="live-dot">Live</div>
+      <a href="home.html" class="home-btn">Home</a>
+      <button class="mode-btn" onclick="toggleMode()" id="modeIcon">☀️</button>
+    </div>
+  </nav> -->
+
+
+  <div class="navbar">
+    <a href="home.html" class="back-btn">←</a>
+    <span class="nav-title">Traffic Monitor 🚦</span>
+    <div class="right-group">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+
+
+  <div class="page">
+
+    <!-- STAT CARDS -->
+    <div class="stat-row">
+      <div class="stat-card fade-up">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Total On Campus</div>
+        <div class="stat-value" id="totalCount">0</div>
+        <div class="stat-sub">of 2,760 capacity</div>
+      </div>
+      <div class="stat-card fade-up delay-1">
+        <div class="stat-icon">📊</div>
+        <div class="stat-label">Average Occupancy</div>
+        <div class="stat-value green" id="avgOcc">0%</div>
+        <div class="stat-sub">Available</div>
+      </div>
+      <div class="stat-card fade-up delay-2">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-label">Crowded Locations</div>
+        <div class="stat-value red" id="crowdedCount">0</div>
+        <div class="stat-sub">of 10 monitored</div>
+      </div>
+      <div class="stat-card fade-up delay-3">
+        <div class="stat-icon">🕐</div>
+        <div class="stat-label">Last Updated</div>
+        <div class="stat-value" style="font-size:22px;padding-top:4px" id="lastUpdated">--:--</div>
+        <button class="refresh-link" onclick="refreshData()">↻ Refresh now</button>
+      </div>
+    </div>
+
+    <!-- HOURLY CHART -->
+    <div class="chart-section fade-up delay-1">
+      <div class="chart-title">📈 Today's Hourly Campus Activity</div>
+      <div class="chart-wrap" id="chartWrap"></div>
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-dot low"></div>Low Traffic
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot mod"></div>Moderate
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot high"></div>High Traffic
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE FILTER -->
+    <div class="filter-bar fade-up">
+      <span class="filter-label">Filter by Zone:</span>
+      <button class="filter-btn active" onclick="filterZone('all',this)">All</button>
+      <button class="filter-btn" onclick="filterZone('academic',this)">Academic</button>
+      <button class="filter-btn" onclick="filterZone('food',this)">Food & Social</button>
+      <button class="filter-btn" onclick="filterZone('recreation',this)">Recreation</button>
+
+    </div>
+
+    <!-- LOCATIONS GRID -->
+    <div class="section-title fade-up"><span></span> Campus Locations</div>
+    <div class="loc-grid" id="locGrid"></div>
+
+  </div>
+
+  <script>
+    // ── DATA ──
+    const locations = [
+      { name: "Main Library", cat: "Academic", zone: "academic", pct: 64, cur: 320, cap: 500, stay: "2.5 hrs", peak: "10AM–2PM", wifi: 74 },
+      { name: "Martin Luther Block", cat: "Academic", zone: "academic", pct: 54, cur: 65, cap: 120, stay: "1.5 hrs", peak: "11AM–4PM", wifi: 51 },
+      { name: "Turing Block", cat: "Academic", zone: "academic", pct: 59, cur: 59, cap: 100, stay: "2 hrs", peak: "2PM–5PM", wifi: 43 },
+
+      { name: "Square One", cat: "Food & Social", zone: "food", pct: 72, cur: 216, cap: 300, stay: "45 min", peak: "12PM–2PM", wifi: 74 },
+      { name: "Square Two", cat: "Food & Social", zone: "food", pct: 82, cur: 49, cap: 60, stay: "1 hr", peak: "3PM–6PM", wifi: 54 },
+      { name: "Dohful", cat: "Food & Social", zone: "food", pct: 50, cur: 75, cap: 150, stay: "40 min", peak: "6PM–9PM", wifi: 40 },
+
+      { name: "Gym & Fitness", cat: "Recreation", zone: "recreation", pct: 38, cur: 38, cap: 100, stay: "1 hr", peak: "6AM–8AM", wifi: 22 },
+      { name: "Sportorium", cat: "Recreation", zone: "recreation", pct: 45, cur: 90, cap: 200, stay: "2 hrs", peak: "5PM–7PM", wifi: 10 },
+
+      { name: "Rockfeller Block", cat: "Academic", zone: "academic", pct: 91, cur: 182, cap: 200, stay: "1 hr", peak: "9AM–11AM", wifi: 88 },
+      { name: "Exploretorium", cat: "Academic", zone: "academic", pct: 30, cur: 60, cap: 200, stay: "2 hrs", peak: "2PM–4PM", wifi: 35 }
+    ];
+
+    const hourData = [
+      { label: "6AM", val: 120, type: "low" }, { label: "7AM", val: 350, type: "low" },
+      { label: "8AM", val: 890, type: "moderate" }, { label: "9AM", val: 2100, type: "moderate" },
+      { label: "10AM", val: 3400, type: "moderate" }, { label: "11AM", val: 4200, type: "high" },
+      { label: "12PM", val: 5100, type: "high" }, { label: "1PM", val: 4800, type: "high" },
+      { label: "2PM", val: 4500, type: "high" }, { label: "3PM", val: 3900, type: "high" },
+      { label: "4PM", val: 3200, type: "moderate" }, { label: "5PM", val: 2800, type: "moderate" },
+      { label: "6PM", val: 2200, type: "moderate" }, { label: "7PM", val: 1800, type: "moderate" },
+      { label: "8PM", val: 1500, type: "low" }, { label: "9PM", val: 900, type: "low" },
+      { label: "10PM", val: 500, type: "low" }, { label: "11PM", val: 200, type: "low" },
+    ];
+
+    // ── RENDER CHART ──
+    function renderChart() {
+      const max = Math.max(...hourData.map(h => h.val));
+      const wrap = document.getElementById('chartWrap');
+      wrap.innerHTML = hourData.map(h => {
+        const pct = Math.round((h.val / max) * 100);
+        const label = h.val >= 1000 ? (h.val / 1000).toFixed(1) + 'k' : h.val;
+        return `
+          <div class="chart-bar-group">
+            <span class="bar-val">${label}</span>
+            <div class="bar ${h.type}" style="height:${pct}%" title="${h.val} students at ${h.label}"></div>
+            <span class="bar-label">${h.label}</span>
+          </div>`;
+      }).join('');
+    }
+
+    // ── RENDER LOCATIONS ──
+    function renderLocations(zone = 'all') {
+      const filtered = zone === 'all' ? locations : locations.filter(l => l.zone === zone);
+      const crowded = filtered.filter(l => l.pct >= 80).length;
+
+      document.getElementById('locGrid').innerHTML = filtered.map((l, i) => {
+        const color = l.pct >= 80 ? 'red' : l.pct >= 60 ? 'yellow' : 'green';
+        const fillClass = l.pct >= 80 ? 'fill-red' : l.pct >= 60 ? 'fill-yellow' : 'fill-green';
+        const trendLabel = l.pct >= 80 ? 'Crowded' : l.pct >= 60 ? 'Moderate' : 'Low';
+        const trendClass = l.pct >= 80 ? 'crowded' : l.pct >= 60 ? 'moderate' : 'low';
+        const crowdedPulse = l.pct >= 80 ? 'crowded-pulse' : '';
+        return `
+          <div class="loc-card ${crowdedPulse}" style="animation:fadeUp 0.4s ease ${i * 0.07}s both">
+            <div class="loc-head">
+              <div class="loc-info">
+                <div class="loc-name">📍 ${l.name}</div>
+                <div class="loc-cat">${l.cat}</div>
+              </div>
+              <span class="loc-trend ${trendClass}">${trendLabel}</span>
+            </div>
+            <div class="loc-pct ${color}">${l.pct}%</div>
+            <div class="loc-occ">occupied &nbsp;·&nbsp; ${l.cur}/${l.cap} people</div>
+            <div class="progress-bar">
+              <div class="progress-fill ${fillClass}" style="width:${l.pct}%"></div>
+            </div>
+            <div class="loc-meta">
+              <div class="meta-item"><div class="meta-key">Current</div><div class="meta-val">${l.cur}/${l.cap}</div></div>
+              <div class="meta-item"><div class="meta-key">Avg Stay</div><div class="meta-val">${l.stay}</div></div>
+              <div class="meta-item"><div class="meta-key">Peak Hours</div><div class="meta-val">${l.peak}</div></div>
+              <div class="meta-item"><div class="meta-key">WiFi Load</div><div class="meta-val">${l.wifi}%</div></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── STATS ──
+    function updateStats() {
+      const total = locations.reduce((a, l) => a + l.cur, 0);
+      const avg = Math.round(locations.reduce((a, l) => a + l.pct, 0) / locations.length);
+      const crowded = locations.filter(l => l.pct >= 80).length;
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+      animateCount('totalCount', total);
+      animateCount('avgOcc', avg, '%');
+      animateCount('crowdedCount', crowded);
+      document.getElementById('lastUpdated').textContent = time;
+    }
+
+    function animateCount(id, target, suffix = '') {
+      const el = document.getElementById(id);
+      let start = 0, duration = 900;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    // ── FILTER ──
+    function filterZone(zone, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderLocations(zone);
+    }
+
+    // ── REFRESH ──
+    function refreshData() {
+      // Randomise data slightly for demo
+      locations.forEach(l => {
+        l.pct = Math.max(10, Math.min(99, l.pct + Math.floor((Math.random() - 0.5) * 10)));
+        l.cur = Math.round(l.pct / 100 * l.cap);
+      });
+      renderLocations(document.querySelector('.filter-btn.active').textContent.toLowerCase().replace('food & social', 'food').replace('all', 'all'));
+      updateStats();
+    }
+
+    // ── DARK MODE ──
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.getElementById('modeIcon').textContent =
+        document.body.classList.contains('dark') ? '🌙' : '☀️';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('modeIcon').textContent = '🌙';
+    }
+
+    // ── INIT ──
+    renderChart();
+    renderLocations();
+    updateStats();
+
+    // Auto refresh every 30s
+    setInterval(refreshData, 30000);
+  </script>
+</body>
+
+</html>

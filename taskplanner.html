@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Task Planner – uCampus++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="taskplanner.css">
+
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <a href="home.html" class="back-btn">←</a>
+    <span class="nav-title">📝 Task Planner</span>
+    <div class="right-group">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- DATE CARD -->
+    <div class="date-card">
+      <div class="date-card-title">📅 Select Date</div>
+      <div class="selectors">
+        <select id="day"></select>
+        <select id="month"></select>
+        <select id="year"></select>
+      </div>
+      <div id="selectedDateText">Select a date above</div>
+      <div class="date-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="yearProgress" style="width:0%"></div>
+        </div>
+        <span class="progress-text" id="yearProgressText"></span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-mini">
+        <div class="stat-mini-val" id="statTotal">0</div>
+        <div class="stat-mini-label">Total Tasks</div>
+      </div>
+      <div class="stat-mini">
+        <div class="stat-mini-val" id="statDone">0</div>
+        <div class="stat-mini-label">Completed</div>
+      </div>
+      <div class="stat-mini">
+        <div class="stat-mini-val" id="statPending">0</div>
+        <div class="stat-mini-label">Pending</div>
+      </div>
+    </div>
+
+    <!-- ADD TASK -->
+    <div class="input-card">
+      <div class="task-group-label" style="margin-bottom:14px">✏️ Add New Task</div>
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea class="task-input" id="taskInput" placeholder="What needs to be done today?"></textarea>
+        </div>
+        <select class="priority-select" id="prioritySelect">
+          <option value="high">🔴 High Priority</option>
+          <option value="medium" selected>🟡 Medium</option>
+          <option value="low">🟢 Low Priority</option>
+        </select>
+        <button class="add-btn" onclick="addTask()">+ Add Task</button>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-chip" onclick="setFilter('pending',this)">⏳ Pending</button>
+      <button class="filter-chip" onclick="setFilter('done',this)">✅ Completed</button>
+      <button class="filter-chip" onclick="setFilter('high',this)">🔴 High</button>
+      <button class="filter-chip" onclick="setFilter('medium',this)">🟡 Medium</button>
+      <button class="filter-chip" onclick="setFilter('low',this)">🟢 Low</button>
+    </div>
+
+    <!-- TASK LIST -->
+    <div id="taskList"></div>
+
+  </div>
+
+  <script>
+    // ── STATE ──
+    let selectedDate = '';
+    let tasks = JSON.parse(localStorage.getItem('tasks_v2')) || {};
+    let currentFilter = 'all';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // ── DROPDOWNS ──
+    const daySelect = document.getElementById('day');
+    const monthSelect = document.getElementById('month');
+    const yearSelect = document.getElementById('year');
+
+    for (let d = 1; d <= 31; d++) daySelect.innerHTML += `<option value="${d}">${d}</option>`;
+    months.forEach((m, i) => monthSelect.innerHTML += `<option value="${i}">${m}</option>`);
+    for (let y = 2020; y <= 2035; y++) yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+
+    // Set today
+    const today = new Date();
+    daySelect.value = today.getDate();
+    monthSelect.value = today.getMonth();
+    yearSelect.value = today.getFullYear();
+    updateSelectedDate();
+
+    function updateSelectedDate() {
+      const d = daySelect.value, m = monthSelect.value, y = yearSelect.value;
+      selectedDate = `${y}-${m}-${d}`;
+      document.getElementById('selectedDateText').textContent = `${d} ${months[m]} ${y}`;
+
+      // Year progress
+      const date = new Date(y, m, d);
+      const start = new Date(y, 0, 1);
+      const end = new Date(y, 11, 31);
+      const pct = Math.round(((date - start) / (end - start)) * 100);
+      document.getElementById('yearProgress').style.width = pct + '%';
+      document.getElementById('yearProgressText').textContent = `Day ${Math.floor((date - start) / (1000 * 60 * 60 * 24)) + 1} of ${y}`;
+
+      showTasks();
+    }
+
+    daySelect.onchange = monthSelect.onchange = yearSelect.onchange = updateSelectedDate;
+
+    // ── ADD TASK ──
+    function addTask() {
+      if (!selectedDate) { alert('Select a date first'); return; }
+      const text = document.getElementById('taskInput').value.trim();
+      if (!text) return;
+      const priority = document.getElementById('prioritySelect').value;
+
+      if (!tasks[selectedDate]) tasks[selectedDate] = [];
+      tasks[selectedDate].push({
+        text, priority, done: false,
+        createdAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+      });
+      localStorage.setItem('tasks_v2', JSON.stringify(tasks));
+      document.getElementById('taskInput').value = '';
+      showTasks();
+    }
+
+    // Enter key to add
+    document.getElementById('taskInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addTask(); }
+    });
+
+    // ── FILTER ──
+    function setFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showTasks();
+    }
+
+    // ── SHOW TASKS ──
+    function showTasks() {
+      const list = document.getElementById('taskList');
+      let arr = tasks[selectedDate] || [];
+
+      // Stats
+      document.getElementById('statTotal').textContent = arr.length;
+      document.getElementById('statDone').textContent = arr.filter(t => t.done).length;
+      document.getElementById('statPending').textContent = arr.filter(t => !t.done).length;
+
+      // Filter
+      let filtered = arr;
+      if (currentFilter === 'pending') filtered = arr.filter(t => !t.done);
+      else if (currentFilter === 'done') filtered = arr.filter(t => t.done);
+      else if (['high', 'medium', 'low'].includes(currentFilter)) filtered = arr.filter(t => t.priority === currentFilter);
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div class="empty-title">${arr.length === 0 ? 'No tasks yet' : 'Nothing here'}</div>
+            <div class="empty-sub">${arr.length === 0 ? 'Add your first task above!' : 'Try a different filter'}</div>
+          </div>`;
+        return;
+      }
+
+      // Map back to real indices
+      const realIndices = arr.reduce((acc, t, i) => {
+        const match = filtered.includes(t);
+        if (match) acc.push(i);
+        return acc;
+      }, []);
+
+      list.innerHTML = `
+        <div class="task-group-label">${filtered.length} Task${filtered.length !== 1 ? 's' : ''}</div>
+        ${filtered.map((t, fi) => {
+        const i = realIndices[fi];
+        const badgeClass = `badge-${t.priority || 'medium'}`;
+        const priLabel = t.priority === 'high' ? '🔴 High' : t.priority === 'low' ? '🟢 Low' : '🟡 Medium';
+        return `
+          <div class="todo-item pri-${t.priority || 'medium'} ${t.done ? 'done-item' : ''}" style="animation:slideIn 0.3s ${fi * 0.05}s ease both">
+            <div class="custom-check ${t.done ? 'checked' : ''}" onclick="toggleDone(${i})">${t.done ? '✓' : ''}</div>
+            <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
+            <span class="priority-badge ${badgeClass}">${priLabel}</span>
+            <span class="task-time">${t.createdAt || ''}</span>
+            <button class="delete-btn" onclick="deleteTask(${i})" title="Delete">✕</button>
+          </div>`;
+      }).join('')}`;
+    }
+
+    function toggleDone(i) {
+      tasks[selectedDate][i].done = !tasks[selectedDate][i].done;
+      localStorage.setItem('tasks_v2', JSON.stringify(tasks));
+      showTasks();
+    }
+
+    function deleteTask(i) {
+      tasks[selectedDate].splice(i, 1);
+      localStorage.setItem('tasks_v2', JSON.stringify(tasks));
+      showTasks();
+    }
+
+    // ── DARK MODE ──
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.getElementById('modeIcon').textContent = document.body.classList.contains('dark') ? '🌙' : '☀️';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('modeIcon').textContent = '🌙';
+    }
+  </script>
+</body>
+
+</html>

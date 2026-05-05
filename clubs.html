@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>uCampus++ Clubs</title>
+  <link rel="stylesheet" href="clubs.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar">
+
+    <a href="home.html" class="back-btn">←</a>
+
+
+    <span class="nav-title">Clubs 🎭</span>
+
+
+    <div class="nav-right">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+
+  <div class="controls">
+    <input type="text" id="searchBar" placeholder="Search clubs..." onkeyup="searchClubs()" />
+
+    <div class="filters">
+      <button onclick="filterClubs('all')">All</button>
+      <button onclick="filterClubs('hiring')">Hiring</button>
+      <button onclick="filterClubs('soon')">Hiring Soon</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- NATRAJ -->
+    <div class="card" data-status="hiring" onclick="toggleDetails(this)">
+      <div class="badge hiring">Hiring</div>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKXZk-OTFwlhH6yKl_c04bYTBMM7j0fdOxXQ&s" />
+      <div class="card-content">
+        <div class="title">Natraj</div>
+        <div class="details">
+          💃 Dance Society<br />
+          🎯 Events, competitions<br />
+          📍 Auditorium<br /><br />
+          Join if you love dancing!
+        </div>
+      </div>
+    </div>
+
+    <!-- DHWANI -->
+    <div class="card" data-status="soon" onclick="toggleDetails(this)">
+      <div class="badge soon">Hiring Soon</div>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCmKauDvHzKycxKOvCgM5Ry1Y0Zyo4o3NyzQ&s" />
+      <div class="card-content">
+        <div class="title">Dhwani</div>
+        <div class="details">
+          🎤 Music & Singing<br />
+          🎯 Performances & events<br />
+          🎶 Open mic sessions
+        </div>
+      </div>
+    </div>
+
+    <!-- LITERARY -->
+    <div class="card" data-status="none" onclick="toggleDetails(this)">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq3NuuDYy0hvqBAxfdUieErnZpTrLuRRdzCw&s" />
+      <div class="card-content">
+        <div class="title">Literaryllis</div>
+        <div class="details">
+          ✍ Poetry & Writing<br />
+          📖 Debates & storytelling<br />
+          🎯 Content creation
+        </div>
+      </div>
+    </div>
+
+    <!-- NSS -->
+    <div class="card" data-status="hiring" onclick="toggleDetails(this)">
+      <div class="badge hiring">Hiring</div>
+      <img src="https://pbs.twimg.com/profile_images/2008843506526388224/jW78wNyZ.jpg" />
+      <div class="card-content">
+        <div class="title">NSS</div>
+        <div class="details">
+          🤝 Social Service<br />
+          🌍 Community work<br />
+          ❤️ Volunteering
+        </div>
+      </div>
+    </div>
+
+    <!-- NCC -->
+    <div class="card" data-status="none" onclick="toggleDetails(this)">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyT5plupOFFNIBEkLdNXBMaMEEF-shduIMew&s" />
+      <div class="card-content">
+        <div class="title">NCC</div>
+        <div class="details">
+          🪖 Discipline & Training<br />
+          🇮🇳 National Service<br />
+          🎯 Camps & drills
+        </div>
+      </div>
+    </div>
+
+    <!-- KARATE -->
+    <div class="card" data-status="soon" onclick="toggleDetails(this)">
+      <div class="badge soon">Hiring Soon</div>
+      <img
+        src="https://thumbs.dreamstime.com/b/vector-illustration-silhouette-fighter-combat-karate-priting-product-your-brand-logo-icon-symbol-club-317435435.jpg" />
+      <div class="card-content">
+        <div class="title">Karate Club</div>
+        <div class="details">
+          🥋 Karate & Self Defense<br />
+          💪 Strength & discipline<br />
+          🛡 Protection skills<br />
+          🏆 Competitions
+        </div>
+      </div>
+    </div>
+
+    <!-- HAPPINESS -->
+    <div class="card" data-status="none" onclick="toggleDetails(this)">
+      <img src="https://www.chitkara.edu.in/happiness-centre/images/mobile-logo.png" />
+      <div class="card-content">
+        <div class="title">Happiness Club</div>
+        <div class="details">
+          😊 Fun activities<br />
+          🎯 Mental wellness<br />
+          💛 Events & bonding
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle details
+    function toggleDetails(card) {
+      let details = card.querySelector(".details");
+      details.classList.toggle("show");
+    }
+
+    // Filter function
+    function filterClubs(type) {
+      let cards = document.querySelectorAll(".card");
+
+      cards.forEach((card) => {
+        let status = card.getAttribute("data-status");
+
+        if (type === "all" || status === type) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    // Search function
+    function searchClubs() {
+      let input = document.getElementById("searchBar").value.toLowerCase();
+      let cards = document.querySelectorAll(".card");
+
+      cards.forEach((card) => {
+        let title = card.querySelector(".title").innerText.toLowerCase();
+
+        if (title.includes(input)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedMode = localStorage.getItem("mode");
+      const icon = document.getElementById("modeIcon");
+
+      if (savedMode === "dark") {
+        document.body.classList.add("dark");
+        if (icon) icon.innerHTML = "🌙";
+      } else {
+        document.body.classList.remove("dark");
+        if (icon) icon.innerHTML = "☀️";
+      }
+    });
+
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+
+      const icon = document.getElementById("modeIcon");
+
+      if (document.body.classList.contains("dark")) {
+        localStorage.setItem("mode", "dark");
+        icon.innerHTML = "🌙";
+      } else {
+        localStorage.setItem("mode", "light");
+        icon.innerHTML = "☀️";
+      }
+    }
+  </script>
+</body>
+
+</html>

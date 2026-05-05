@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uCampus++ Notices</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="notice.css" />
+
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="home.html" class="back-btn">←</a>
+    <span class="nav-title">📢 Notices & Announcements</span>
+    <div class="right-group">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <h1>Notices &amp; Announcements</h1>
+    <p>Stay updated with the latest campus news and events.</p>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="active" onclick="filterNotices('all', this)">All</button>
+    <button onclick="filterNotices('urgent', this)">⚠️ Urgent</button>
+    <button onclick="filterNotices('important', this)">📅 Important</button>
+    <button onclick="filterNotices('info', this)">ℹ️ Info</button>
+  </div>
+
+  <section class="notices">
+    <div class="notice-container" id="noticeContainer">
+
+      <!-- NOTICE 1 -->
+      <div class="notice-card urgent" data-type="urgent">
+        <div class="notice-icon">⚠️</div>
+        <div class="notice-content">
+          <h3>Sessional Test-2 Schedule Released <span class="tag urgent-tag">Urgent</span></h3>
+          <p>Sessional Test-2 will be conducted from May 11 to May 16, 2026. Check Chalkpad Pro for date sheet.</p>
+          <span class="meta">May 2026 • Exam Cell</span>
+        </div>
+      </div>
+
+      <!-- NOTICE 2 -->
+      <div class="notice-card important" data-type="important">
+        <div class="notice-icon">📅</div>
+        <div class="notice-content">
+          <h3>Last Teaching Day Announced <span class="tag important-tag">Important</span></h3>
+          <p>The last teaching day for the semester is May 29, 2026.</p>
+          <span class="meta">May 2026 • Academic Office</span>
+        </div>
+      </div>
+
+      <!-- NOTICE 3 -->
+      <div class="notice-card info" data-type="info">
+        <div class="notice-icon">ℹ️</div>
+        <div class="notice-content">
+          <h3>Hackathon Registrations Open <span class="tag info-tag">Info</span></h3>
+          <p>Students can now register for upcoming hackathons via the portal.</p>
+          <span class="meta">Student Club</span>
+        </div>
+      </div>
+
+      <!-- NOTICE 4 -->
+      <div class="notice-card important" data-type="important">
+        <div class="notice-icon">🎤</div>
+        <div class="notice-content">
+          <h3>AI Club Orientation <span class="tag important-tag">Important</span></h3>
+          <p>Orientation session scheduled this Friday in the auditorium.</p>
+          <span class="meta">AI Club</span>
+        </div>
+      </div>
+
+      <!-- NOTICE 5 -->
+      <div class="notice-card info" data-type="info">
+        <div class="notice-icon">🏫</div>
+        <div class="notice-content">
+          <h3>Campus Access Available 24/7 <span class="tag info-tag">Info</span></h3>
+          <p>The campus is accessible 24 hours a day, 7 days a week. Students should follow all security guidelines
+            while on campus.</p>
+          <span class="meta">Campus Administration</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    function filterNotices(type, btn) {
+      document.querySelectorAll('.filter-tabs button').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.querySelectorAll('.notice-card').forEach(card => {
+        card.style.display = (type === 'all' || card.getAttribute('data-type') === type) ? '' : 'none';
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedMode = localStorage.getItem('mode');
+      const icon = document.getElementById('modeIcon');
+      if (savedMode === 'dark') {
+        document.body.classList.add('dark');
+        if (icon) icon.innerHTML = '🌙';
+      } else {
+        document.body.classList.remove('dark');
+        if (icon) icon.innerHTML = '☀️';
+      }
+    });
+
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      const icon = document.getElementById('modeIcon');
+      if (document.body.classList.contains('dark')) {
+        localStorage.setItem('mode', 'dark');
+        icon.innerHTML = '🌙';
+      } else {
+        localStorage.setItem('mode', 'light');
+        icon.innerHTML = '☀️';
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f4f6ff, #eef1ff);
+    color: #333;
+}
+
+/* PAGE */
+.page {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* HEADER */
+.header h1 {
+    color: #e31e24;
+    font-size: 40px;
+}
+
+.header p {
+    margin-top: 10px;
+    opacity: 0.7;
+}
+
+/* FEATURES */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+/* CARD */
+.card {
+    width: 250px;
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.card h3 {
+    color: #e31e24;
+}
+
+.card p {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* HOVER */
+.card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 20px 40px rgba(227, 30, 36, 0.4);
+}
+
+/* COMING */
+.coming {
+    margin-top: 50px;
+    font-size: 28px;
+    color: #e31e24;
+    font-weight: bold;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    background: linear-gradient(45deg, #e31e24, #ff5a5f);
+    color: white;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #e31e24;
+    color: white;
+
+    padding: 15px 25px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    z-index: 1000;
+}
+
+/* center title */
+.nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* buttons */
+.back-btn,
+.home-btn {
+    text-decoration: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+/* hover oval effect*/
+.back-btn:hover,
+.home-btn:hover {
+    background: white;
+    color: #e31e24;
+}
+
+/* right group */
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* toggle */
+.toggle {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.toggle:hover {
+    background: white;
+    color: #e31e24;
+}
+
+.page {
+    text-align: center;
+    padding: 100px 20px 40px 20px;
+}
+
+
+body.dark {
+    background: #121212;
+    color: white;
+}
+
+body.dark .navbar {
+    background: #111;
+}
+
+body.dark .card {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark .header h1 {
+    color: #ff5a5f;
+}
+
+body.dark .coming {
+    color: #ff5a5f;
+}

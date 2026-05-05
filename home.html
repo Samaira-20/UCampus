@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>uCampus++</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="home.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="home.html" class="logo">
+      <img src="https://www.chitkara.edu.in/wp-content/themes/chitkara/images/logo.png" alt="Chitkara Logo" />
+      <span class="logo-text">
+        <span class="u">u</span>Campus<em>++</em>
+      </span>
+    </a>
+
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <div class="nav-links" id="navLinks">
+      <a href="clubs.html">Clubs</a>
+      <a href="notice.html">Notices</a>
+      <a href="hackathon.html">Hackathons</a>
+      <a href="mess.html">Mess Menu</a>
+      <a href="lostfound.html">Lost & Found</a>
+
+      <div class="dropdown">
+        <button class="dropbtn" onclick="toggleDropdown()">More ▾</button>
+        <div class="dropdown-content" id="dropdownMenu">
+          <a href="taskplanner.html">Task Planner</a>
+          <a href="events.html">Events</a>
+          <!-- <a href="price.html">Price Comparison</a> -->
+          <a href="traffic.html">Traffic</a>
+          <a href="ecommerce.html">E-Commerce</a>
+          <a href="#reviews" onclick="closeMenu()">Reviews</a>
+          <a href="helpdesk.html">Helpdesk</a>
+        </div>
+      </div>
+
+      <button class="toggle-btn" onclick="toggleMode()" id="modeIcon">☀️</button>
+    </div>
+  </nav>
+
+  <!-- HERO SLIDESHOW -->
+  <div class="hero">
+    <div class="slide active"
+      style="background-image:url('https://images.seeklogo.com/logo-png/61/2/chitkara-university-logo-png_seeklogo-618223.png')">
+      <div class="content">
+        <h2>Welcome to</h2>
+        <h1>uCampus++</h1>
+        <p>Your Smart Campus Platform</p>
+      </div>
+    </div>
+    <div class="slide" data-link="https://www.chitkara.edu.in/"
+      style="background-image:url('https://www.chitkara.edu.in/blogs/wp-content/uploads/2022/03/CUB4-Top-10-reasons-why-Chitkara-University-is-the-best-University-in-North-India.jpg')">
+      <div class="content">
+        <h2>Explore</h2>
+        <h1>Campus Life</h1>
+        <p>Discover your university experience</p>
+      </div>
+    </div>
+    <div class="slide" data-link="hackathon.html"
+      style="background-image:url('https://img.freepik.com/free-vector/hackathon-doodle-hand-drawing-team-programmers-web-developers-managers-graphic-designers-deve_88138-1348.jpg?semt=ais_hybrid&w=740&q=80')">
+      <div class="content">
+        <h2>Join</h2>
+        <h1>Hackathons</h1>
+        <p>Build, Compete & Win</p>
+      </div>
+    </div>
+    <div class="slide" data-link="mess.html"
+      style="background-image:url('https://d1csarkz8obe9u.cloudfront.net/posterpreviews/meal-menue-logo-design-template-ca4328b873982607c2c66ab6d4f8ae45_screen.jpg?ts=1681605842')">
+      <div class="content">
+        <h2>Check</h2>
+        <h1>Mess Menu</h1>
+        <p>Your daily meals simplified</p>
+      </div>
+    </div>
+    <div class="slide" data-link="clubs.html"
+      style="background-image:url('https://sbpress.com/wp-content/uploads/2017/02/clubs.jpg')">
+      <div class="content">
+        <h2>Discover</h2>
+        <h1>Clubs</h1>
+        <p>Find your passion</p>
+      </div>
+    </div>
+    <div class="slide" data-link="taskplanner.html"
+      style="background-image:url('https://i.pinimg.com/474x/6f/91/23/6f91230f57ad1582b170d3066b7963a0.jpg')">
+      <div class="content">
+        <h2>Manage</h2>
+        <h1>Tasks</h1>
+        <p>Stay organized</p>
+      </div>
+    </div>
+    <div class="slide" data-link="ecommerce.html"
+      style="background-image:url('https://ecomwarrioracademy.com/wp-content/uploads/2020/08/ecommerce-store.jpg')">
+      <div class="content">
+        <h2>Shop</h2>
+        <h1>E-Commerce</h1>
+        <p>Campus essentials in one place</p>
+      </div>
+    </div>
+    <div class="slide" data-link="events.html"
+      style="background-image:url('https://thumbs.dreamstime.com/b/paper-events-confetti-sign-white-over-background-vector-holiday-illustration-57529933.jpg')">
+      <div class="content">
+        <h2>Discover</h2>
+        <h1>Events</h1>
+        <p>Never miss what’s happening on campus</p>
+      </div>
+    </div>
+    <div class="slide" data-link="lostfound.html"
+      style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2f/df/a2/2fdfa2d9-dab5-26f1-5ff5-296500767ddf/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/1200x630wa.png')">
+      <div class="content">
+        <h2>Recover</h2>
+        <h1>Lost & Found</h1>
+        <p>Find what you lost, help others too</p>
+      </div>
+    </div>
+    <div class="slide" data-link="notice.html"
+      style="background-image:url('https://www.hlf.com.sg/assets/img/site-services/notices/banner-mobile.jpg')">
+      <div class="content">
+        <h2>Stay Updated</h2>
+        <h1>Notices</h1>
+        <p>All important announcements in one place</p>
+      </div>
+    </div>
+
+    <div class="slide" data-link="traffic.html"
+      style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnnl6UKb_-anrowKS26HK09QmJsJQ2mLWLFA&s')">
+      <div class="content">
+        <h2>Live Status</h2>
+        <h1>Traffic</h1>
+        <p>See real-time campus crowd levels</p>
+      </div>
+    </div>
+
+
+
+    <div class="slide-dots" id="slideDots"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="about fade-up">
+    <div>
+      <div class="section-label">About the Platform</div>
+      <h2 class="section-title">Everything campus,<br>in one place.</h2>
+      <p class="section-sub">uCampus++ is your all-in-one student platform — check mess menus, track events, explore
+        hackathons, manage tasks, and stay updated with campus life.</p>
+      <div class="stat-row">
+        <div class="stat"><strong>10+</strong><span>Features</span></div>
+        <div class="stat"><strong>500+</strong><span>Students</span></div>
+        <div class="stat"><strong>24/7</strong><span>Access</span></div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <img
+        src="https://www.chitkara.edu.in/blogs/wp-content/uploads/2022/03/CUB4-Top-10-reasons-why-Chitkara-University-is-the-best-University-in-North-India.jpg"
+        alt="Campus" />
+      <div class="about-badge">🎓 Chitkara University</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="cards-wrap">
+    <div class="section-label">Quick Access</div>
+    <h2 class="section-title">Everything you need</h2>
+    <div class="cards-grid">
+      <div class="feat-card fade-up" onclick="window.location='mess.html'">
+        <span class="feat-icon">🍽️</span>
+        <h3>Mess Menu</h3>
+        <p>Check daily meals easily, plan your diet, stay fuelled.</p>
+        <div class="feat-arrow">→</div>
+      </div>
+      <div class="feat-card fade-up" onclick="window.location='lostfound.html'">
+        <span class="feat-icon">🔍</span>
+        <h3>Lost & Found</h3>
+        <p>Report lost items or help someone recover their belongings.</p>
+        <div class="feat-arrow">→</div>
+      </div>
+      <div class="feat-card fade-up" onclick="window.location='hackathon.html'">
+        <span class="feat-icon">💻</span>
+        <h3>Hackathons</h3>
+        <p>Explore coding competitions, register and win.</p>
+        <div class="feat-arrow">→</div>
+      </div>
+      <div class="feat-card fade-up" onclick="window.location='notes.html'">
+        <span class="feat-icon">📝</span>
+        <h3>Tasks & Notes</h3>
+        <p>Manage your to-do list and access study material.</p>
+        <div class="feat-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTICES -->
+  <section class="notices">
+    <div class="notices-inner">
+      <div class="section-label">Latest Updates</div>
+      <h2 class="section-title">Notices & Announcements</h2>
+      <div class="notice-grid">
+        <div class="notice-card urgent fade-up">
+          <div class="notice-icon-box">⚠️</div>
+          <div class="notice-body">
+            <h3>Sessional Test-2 Schedule <span class="tag urgent-tag">Urgent</span></h3>
+            <p>Sessional Test-2 will be conducted from May 11 to May 16, 2026. Check Chalkpad Pro for date sheet.</p>
+            <div class="notice-meta">May 2026 · Exam Cell</div>
+          </div>
+        </div>
+        <div class="notice-card important fade-up">
+          <div class="notice-icon-box">📅</div>
+          <div class="notice-body">
+            <h3>Last Teaching Day <span class="tag important-tag">Important</span></h3>
+            <p>The last teaching day for the semester is May 29, 2026.</p>
+            <div class="notice-meta">May 2026 · Academic Office</div>
+          </div>
+        </div>
+        <div class="notice-card info fade-up">
+          <div class="notice-icon-box">ℹ️</div>
+          <div class="notice-body">
+            <h3>Hackathon Registrations Open <span class="tag info-tag">Info</span></h3>
+            <p>Students can now register for upcoming hackathons via the portal.</p>
+            <div class="notice-meta">Student Club</div>
+          </div>
+        </div>
+        <div class="notice-card important fade-up">
+          <div class="notice-icon-box">🎤</div>
+          <div class="notice-body">
+            <h3>AI Club Orientation <span class="tag important-tag">Important</span></h3>
+            <p>Orientation session scheduled this Friday in the auditorium.</p>
+            <div class="notice-meta">AI Club</div>
+          </div>
+        </div>
+        <div class="notice-card info fade-up">
+          <div class="notice-icon-box">🏫</div>
+          <div class="notice-body">
+            <h3>Campus Access 24/7 <span class="tag info-tag">Info</span></h3>
+            <p>The campus is accessible 24/7. Follow all security guidelines while on campus.</p>
+            <div class="notice-meta">Campus Administration</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="events">
+    <div class="section-label">What's On</div>
+    <h2 class="section-title">Upcoming Events</h2>
+    <div class="event-grid">
+      <div class="event-card fade-up">
+        <div class="event-num">01</div>
+        <h3>Hackathon 2025</h3>
+        <p>48-hour coding challenge</p>
+        <button class="event-btn" onclick="window.location='events.html'">Register →</button>
+      </div>
+      <div class="event-card fade-up">
+        <div class="event-num">02</div>
+        <h3>Tech Fest</h3>
+        <p>Workshops & competitions</p>
+        <button class="event-btn" onclick="window.location='events.html'">View →</button>
+      </div>
+      <div class="event-card fade-up">
+        <div class="event-num">03</div>
+        <h3>Sports Meet</h3>
+        <p>Annual sports event</p>
+        <button class="event-btn" onclick="window.location='events.html'">Join →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLUBS -->
+  <section class="clubs-section">
+    <div class="clubs-inner">
+      <div class="section-label">Campus Life</div>
+      <h2 class="section-title">Campus Clubs</h2>
+      <div class="clubs-grid">
+        <div class="club-card fade-up">
+          <div class="club-img-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKXZk-OTFwlhH6yKl_c04bYTBMM7j0fdOxXQ&s"
+              alt="Natraj" />
+            <div class="club-badge">Hiring Now</div>
+          </div>
+          <div class="club-info">
+            <h3>Natraj</h3>
+            <p>💃 Dance Society · Events & competitions · 📍 Auditorium</p>
+          </div>
+        </div>
+        <div class="club-card fade-up">
+          <div class="club-img-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCmKauDvHzKycxKOvCgM5Ry1Y0Zyo4o3NyzQ&s"
+              alt="Dhwani" />
+            <div class="club-badge soon">Hiring Soon</div>
+          </div>
+          <div class="club-info">
+            <h3>Dhwani</h3>
+            <p>🎤 Music & Singing · Open mic sessions</p>
+          </div>
+        </div>
+        <div class="club-card fade-up">
+          <div class="club-img-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq3NuuDYy0hvqBAxfdUieErnZpTrLuRRdzCw&s"
+              alt="Literaryllis" />
+          </div>
+          <div class="club-info">
+            <h3>Literaryllis</h3>
+            <p>✍ Poetry & Writing · Debates & storytelling</p>
+          </div>
+        </div>
+        <div class="club-card fade-up">
+          <div class="club-img-wrap">
+            <img src="https://pbs.twimg.com/profile_images/2008843506526388224/jW78wNyZ.jpg" alt="NSS" />
+            <div class="club-badge">Hiring Now</div>
+          </div>
+          <div class="club-info">
+            <h3>NSS</h3>
+            <p>🤝 Social Service · Community work</p>
+          </div>
+        </div>
+      </div>
+      <div class="clubs-footer">
+        <a href="clubs.html" class="view-all-btn">View All Clubs →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section" id="reviews">
+    <div class="section-label">Community</div>
+    <h2 class="section-title">Student Reviews</h2>
+    <div class="reviews-grid" id="reviewList">
+      <div class="review-card">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-author">Samaira</div>
+        <div class="review-text">Best campus platform. Makes university life so much easier!</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-author">Radhika</div>
+        <div class="review-text">A smart platform that enhances student convenience every single day.</div>
+      </div>
+    </div>
+
+    <div class="review-form-box fade-up">
+      <h3>Leave a Review 💬</h3>
+      <div class="form-field">
+        <label>Your Name</label>
+        <input type="text" id="name" placeholder="e.g. Arjun Singh" />
+      </div>
+      <div class="form-field">
+        <label>Rating</label>
+        <select id="rating">
+          <option value="5">⭐⭐⭐⭐⭐ — Excellent</option>
+          <option value="4">⭐⭐⭐⭐ — Good</option>
+          <option value="3">⭐⭐⭐ — Average</option>
+          <option value="2">⭐⭐ — Poor</option>
+          <option value="1">⭐ — Terrible</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Your Review</label>
+        <textarea id="message" placeholder="Share your experience..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="addReview()">Submit Review</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">uCampus++</div>
+    <p>Contact: <a href="mailto:ucampushelpdesk@gmail.com">ucampushelpdesk@gmail.com</a> &nbsp;|&nbsp; +91 9876543210
+    </p>
+
+    <p style="margin-top:0.8rem; font-size:0.8rem;">© 2026 uCampus++ · Built for Chitkara University students</p>
+    <p class="footer-credit">
+      Made with ❤️ by <strong>Radhika</strong> & <strong>Samaira</strong>
+    </p>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script>
+    /* DARK MODE */
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.getElementById('modeIcon').textContent =
+        document.body.classList.contains('dark') ? '🌙' : '☀️';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('modeIcon').textContent = '🌙';
+    }
+
+    /* NAV */
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('show'); }
+    function toggleDropdown() { document.getElementById('dropdownMenu').classList.toggle('show'); }
+    function closeMenu() {
+      document.getElementById('navLinks').classList.remove('show');
+      document.getElementById('dropdownMenu').classList.remove('show');
+    }
+    window.onclick = e => {
+      if (!e.target.matches('.dropbtn')) {
+        document.getElementById('dropdownMenu').classList.remove('show');
+      }
+    };
+
+    /* SMOOTH SCROLL TO REVIEWS */
+    document.querySelector('a[href="#reviews"]').addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.getElementById('reviews');
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+      closeMenu();
+    });
+
+    /* SLIDESHOW */
+    const slides = document.querySelectorAll('.slide');
+    const dotsEl = document.getElementById('slideDots');
+    let idx = 0;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => { goSlide(i); resetTimer(); };
+      dotsEl.appendChild(d);
+    });
+
+    function goSlide(n) {
+      slides[idx].classList.remove('active');
+      dotsEl.children[idx].classList.remove('active');
+      idx = (n + slides.length) % slides.length;
+      slides[idx].classList.add('active');
+      dotsEl.children[idx].classList.add('active');
+    }
+
+    let timer = setInterval(() => goSlide(idx + 1), 3500);
+    function resetTimer() { clearInterval(timer); timer = setInterval(() => goSlide(idx + 1), 3500); }
+
+    /* FADE UP ON SCROLL */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+    /* ADD REVIEW */
+    // function addReview() {
+    //   const name = document.getElementById('name').value.trim();
+    //   const msg = document.getElementById('message').value.trim();
+    //   const rating = document.getElementById('rating').value;
+    //   if (!name || !msg) { alert('Please fill all fields'); return; }
+    //   const stars = '⭐'.repeat(+rating);
+    //   const card = document.createElement('div');
+    //   card.className = 'review-card';
+    //   card.innerHTML = `<div class="review-stars">${stars}</div><div class="review-author">${name}</div><div class="review-text">${msg}</div>`;
+    //   document.getElementById('reviewList').prepend(card);
+    //   document.getElementById('name').value = '';
+    //   document.getElementById('message').value = '';
+    // }
+    /* ADD REVIEW */
+    function addReview() {
+      const name = document.getElementById("name").value.trim();
+      const msg = document.getElementById("message").value.trim();
+      const rating = document.getElementById("rating").value;
+
+      if (!name || !msg) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const stars = "⭐".repeat(+rating);
+
+      // 🔹 Create UI card
+      const card = document.createElement("div");
+      card.className = "review-card";
+      card.innerHTML = `
+    <div class="review-stars">${stars}</div>
+    <div class="review-author">${name}</div>
+    <div class="review-text">${msg}</div>
+  `;
+      document.getElementById("reviewList").prepend(card);
+
+      // 🔹 LOCAL STORAGE LOGIC (CORRECT PLACE)
+      let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+      reviews.push({ name, msg, rating });
+
+      localStorage.setItem("reviews", JSON.stringify(reviews));
+
+      // Clear input
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+    }
+
+    const saved = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    saved.forEach((r) => {
+      const stars = "⭐".repeat(+r.rating);
+
+      const card = document.createElement("div");
+      card.className = "review-card";
+      card.innerHTML = `
+    <div class="review-stars">${stars}</div>
+    <div class="review-author">${r.name}</div>
+    <div class="review-text">${r.msg}</div>
+  `;
+
+      document.getElementById("reviewList").appendChild(card);
+    });
+
+    slides.forEach(slide => {
+      slide.addEventListener('click', () => {
+        const link = slide.getAttribute('data-link');
+        if (link) {
+          window.location.href = link;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

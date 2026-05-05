@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>uCampus++ Login</title>
+
+  <link rel="stylesheet" href="index.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-logo">u<span>Campus</span>++</div>
+      <div class="header-sub">Student Portal</div>
+    </div>
+
+    <!-- CARD -->
+    <div class="login-card">
+      <div class="card-accent"></div>
+
+      <div class="card-title">Welcome Back</div>
+      <div class="card-desc">Sign in to continue</div>
+
+      <form onsubmit="handleLogin(event)">
+
+        <!-- USERNAME -->
+        <label class="field-label">Email</label>
+        <div class="field-wrap">
+          <input type="text" id="username" placeholder="Enter your email" required>
+        </div>
+
+        <!-- PASSWORD -->
+        <label class="field-label">Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="password" placeholder="Enter your password" required>
+          <button type="button" class="eye-btn" onclick="togglePass('password', this)">👁</button>
+        </div>
+
+        <button type="submit" class="btn-main">Sign In →</button>
+      </form>
+
+      <!-- SIGNUP LINK -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">New here?</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="link-row">
+        Don’t have an account? <a href="signup.html">Create one</a>
+      </div>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script>
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + (type || '');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function togglePass(id, btn) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      const storedUser = localStorage.getItem('username');
+      const storedPass = localStorage.getItem('password');
+
+      if (user === storedUser && pass === storedPass) {
+        showToast("Login successful!", "success");
+
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 1500);
+      } else {
+        showToast("Invalid credentials", "error");
+        document.getElementById('password').value = "";
+      }
+    }
+  </script>
+
+</body>
+
+</html>

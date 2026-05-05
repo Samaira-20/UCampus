@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>uCampus++ Sign Up</title>
+
+  <!-- CSS LINK -->
+  <link rel="stylesheet" href="signup.css" />
+
+  <!-- FONTS -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div class="page">
+    <div class="bg-grid"></div>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-logo">u<span>Campus</span>++</div>
+      <div class="header-sub">Student Portal</div>
+    </div>
+
+    <!-- CARD -->
+    <div class="signup-card">
+      <div class="card-accent"></div>
+      <div class="card-title">Create Account</div>
+      <div class="card-desc">Join uCampus++ and get started today</div>
+
+      <form onsubmit="handleSignup(event)">
+        <!-- NAME -->
+        <label class="field-label">Full Name</label>
+        <div class="field-wrap">
+          <input type="text" id="name" placeholder="Your full name" required />
+        </div>
+
+        <!-- EMAIL -->
+        <label class="field-label">Email Address</label>
+        <div class="field-wrap">
+          <input type="email" id="email" placeholder="you@example.com" required />
+        </div>
+
+        <!-- PASSWORD -->
+        <label class="field-label">Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="password" placeholder="Create password" required
+            oninput="checkStrength(this.value)" />
+          <button type="button" class="eye-btn" onclick="togglePass('password', this)">
+            👁
+          </button>
+        </div>
+
+        <!-- STRENGTH -->
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+
+        <!-- CONFIRM -->
+        <label class="field-label">Confirm Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="confirm" placeholder="Repeat password" required />
+          <button type="button" class="eye-btn" onclick="togglePass('confirm', this)">
+            👁
+          </button>
+        </div>
+
+        <button type="submit" class="btn-signup">Create Account →</button>
+      </form>
+
+      <!-- LOGIN LINK -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">Already have an account?</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="login-row">
+        <a href="login.html">Sign in instead</a>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    function showToast(msg, type) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = "toast " + (type || "");
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    function togglePass(id, btn) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function checkStrength(val) {
+      let score = 0;
+      if (val.length >= 6) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const colors = ["#E8192A", "#f97316", "#eab308", "#22c55e"];
+      const labels = ["Weak", "Fair", "Good", "Strong"];
+
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById("s" + i).style.background =
+          i <= score ? colors[score - 1] : "#ddd";
+      }
+
+      document.getElementById("strength-label").textContent = val.length
+        ? labels[score - 1]
+        : "";
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (pass !== confirm) {
+        showToast("Passwords do not match", "error");
+        return;
+      }
+
+      localStorage.setItem("username", email);
+      localStorage.setItem("password", pass);
+      localStorage.setItem("name", name);
+
+      showToast("Account created!", "success");
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+    }
+  </script>
+</body>
+
+</html>

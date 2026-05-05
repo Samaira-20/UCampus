@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>uCampus++ Mess Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="mess.css" />
+</head>
+
+<body>
+
+  <div class="navbar">
+    <a href="home.html" class="back-btn">←</a>
+    <span class="nav-title">Mess Menu 🍽️</span>
+    <div class="right-group">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Mess Menu</h2>
+      <p>Select your hostel and day to view the full meal schedule.</p>
+    </div>
+
+    <div class="hostel-select">
+      <label class="hostel-pill" id="girlsPill" onclick="selectHostel('girls')">
+        <input type="radio" name="hostel" />
+        <span class="pill-dot"></span>
+        👩 Girls Hostel
+      </label>
+      <label class="hostel-pill" id="boysPill" onclick="selectHostel('boys')">
+        <input type="radio" name="hostel" />
+        <span class="pill-dot"></span>
+        👦 Boys Hostel
+      </label>
+    </div>
+
+    <div class="days">
+      <button onclick="showMenu('monday', this)">Mon</button>
+      <button onclick="showMenu('tuesday', this)">Tue</button>
+      <button onclick="showMenu('wednesday', this)">Wed</button>
+      <button onclick="showMenu('thursday', this)">Thu</button>
+      <button onclick="showMenu('friday', this)">Fri</button>
+      <button onclick="showMenu('saturday', this)">Sat</button>
+      <button onclick="showMenu('sunday', this)">Sun</button>
+    </div>
+
+    <div id="menuBox">
+      <div class="menu-placeholder">
+        <div class="emoji">🍽️</div>
+        <p>Select your hostel and a day to see the menu</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let hostel = '';
+
+    function selectHostel(h) {
+      hostel = h;
+
+
+      document.querySelectorAll('.hostel-pill')
+        .forEach(p => p.classList.remove('selected'));
+
+
+      document.getElementById(h + 'Pill')
+        .classList.add('selected');
+
+      // re-render if a day already selected
+      const activeDay = document.querySelector('.days button.active-day');
+      if (activeDay) {
+        const day = activeDay.textContent.trim().toLowerCase();
+        const dayMap = {
+          mon: 'monday', tue: 'tuesday', wed: 'wednesday',
+          thu: 'thursday', fri: 'friday', sat: 'saturday', sun: 'sunday'
+        };
+        showMenu(dayMap[day] || day, activeDay);
+      }
+    }
+
+
+
+    const girlsMenu = {
+      monday: { breakfast: "Poha + Sweet Daliya + Bread Toast + Fruit + Tea", lunch: "Dal Makhani + Aloo Gajar Mutter + Veg Pulao + Roti + Boondi Raita", snacks: "Mix Pakode + Green Chutney + Tea", dinner: "Moong Masoor + Paneer + Steamed Rice + Roti + Rasgulla" },
+      tuesday: { breakfast: "Mix Paratha + Curd + Chutney + Tea", lunch: "Mix Dal + Soya Chaap + Steamed Rice + Roti + Cucumber Raita", snacks: "Patty / Pastry + Tea", dinner: "Rajma + Dry Aloo + Steamed Rice + Roti + Petha" },
+      wednesday: { breakfast: "Vegetable Macaroni + Cornflakes and Milk + Toast + Tea + Bread Butter Jam + Fruit", lunch: "White Channa + Kadoo Sabzi + Steamed Rice + Roti + Mix Raita + Chutney", snacks: "Samosa + Chutney + Tea", dinner: "Sabut Masoor + Mix Vegetable + Mutter Rice + Roti + Salad + Hot Milk" },
+      thursday: { breakfast: "Methi Prantha / Plain Prantha + Aloo ki Sabzi + Curd + Butter + Tea", lunch: "Kadhi + Aloo Gobhi + Jeera Rice + Roti + Mix Raita", snacks: "Chips + Tea", dinner: "Black Chana + Tamaloo + Steamed Rice + Roti + Rasgulla" },
+      friday: { breakfast: "Masala Sandwich + Idli + Upma + Sambar + Chutney + Tea", lunch: "Dal Palak + Aloo Methi Ki Sabzi + Jeera Rice + Roti + Mix Raita", snacks: "Vegetable Pasta + Tea", dinner: "Amritsari Dal + Paneer Ki Sabzi + Egg Masala + Rice + Roti + Hot Gulab Jamun" },
+      saturday: { breakfast: "Pav Bhaji + Bread Toast + Tea", lunch: "Black Chana + Masala Nutri + Mint Raita + Carrot Steamed Rice + Roti", snacks: "Cake + Tea", dinner: "Mix Dal + Subz Miloni + Roti + Steamed Rice + Choco Pie / Ladoo" },
+      sunday: { breakfast: "Poori + Aloo Chana Sabzi + Halwa + Tea", lunch: "Rajma Masala + Aloo Palak + Steamed Rice + Roti + Boondi Raita", snacks: "Biscuit + Tea", dinner: "Chana Masala + Aloo Nutri Mutter + Roti + Rice + Kheer + Salad" }
+    };
+
+    const boysMenu = {
+      monday: { breakfast: "Mix Prantha + Curd + Chutney + Tea", lunch: "Dal Makhani + Aloo Gajar Mutter + Veg Pulao + Roti + Boondi Raita", snacks: "Patty / Pastry + Tea", dinner: "Moong Masoor + Paneer + Steamed Rice + Roti + Rasgulla" },
+      tuesday: { breakfast: "Poha + Sweet Daliya + Toast + Tea", lunch: "Mix Dal + Soya Chaap + Steamed Rice + Roti + Cucumber Raita", snacks: "Mix Pakoda + Green Chutney + Tea", dinner: "Rajma + Dry Aloo + Steamed Rice + Roti + Petha" },
+      wednesday: { breakfast: "Vegetable Macaroni + Cornflakes and Milk + Toast + Tea + Bread Butter Jam + Fruit", lunch: "White Channa + Kadoo Sabzi + Steamed Rice + Roti + Mix Raita + Chutney", snacks: "Chips + Tea", dinner: "Sabut Masoor + Mix Vegetable + Mutter Rice + Roti + Salad + Hot Milk" },
+      thursday: { breakfast: "Methi Prantha / Plain Prantha + Aloo ki Sabzi + Curd + Butter + Tea", lunch: "Kadhi + Aloo Gobhi + Jeera Rice + Roti + Mix Raita", snacks: "Samosa + Chutney + Tea", dinner: "Black Chana + Tamaloo + Steamed Rice + Roti + Rasgulla" },
+      friday: { breakfast: "Pav Bhaji + Bread Toast + Tea", lunch: "Dal Palak + Aloo Methi Ki Sabzi + Jeera Rice + Roti + Mix Raita", snacks: "Cake + Tea", dinner: "Amritsari Dal + Paneer Ki Sabzi + Egg Masala + Rice + Roti + Hot Gulab Jamun" },
+      saturday: { breakfast: "Masala Sandwich + Idli + Upma + Sambar + Chutney + Tea", lunch: "Black Chana + Masala Nutri + Mint Raita + Carrot Steamed Rice + Roti", snacks: "Vegetable Pasta + Tea", dinner: "Mix Dal + Subz Miloni + Roti + Steamed Rice + Choco Pie / Ladoo" },
+      sunday: { breakfast: "Poori + Aloo Chana Sabzi + Halwa + Tea", lunch: "Rajma Masala + Aloo Palak + Steamed Rice + Roti + Boondi Raita", snacks: "Biscuit + Tea", dinner: "Chana Masala + Aloo Nutri Mutter + Roti + Rice + Kheer + Salad" }
+    };
+
+    function showMenu(day, btn) {
+      if (btn) {
+        document.querySelectorAll('.days button').forEach(b => b.classList.remove('active-day'));
+        btn.classList.add('active-day');
+      }
+
+      if (!hostel) {
+        document.getElementById('menuBox').innerHTML = `
+            <div class="menu-placeholder">
+              <div class="emoji">🏠</div>
+              <p>Please select your hostel first</p>
+            </div>`;
+        return;
+      }
+
+      const data = hostel === 'girls' ? girlsMenu[day] : boysMenu[day];
+      if (!data) {
+        document.getElementById('menuBox').innerHTML = `
+            <div class="menu-placeholder">
+              <div class="emoji">🕐</div>
+              <p>Menu coming soon</p>
+            </div>`;
+        return;
+      }
+
+      const meals = [
+        { icon: '🌅', label: 'Breakfast', key: 'breakfast' },
+        { icon: '☀️', label: 'Lunch', key: 'lunch' },
+        { icon: '🍵', label: 'Snacks', key: 'snacks' },
+        { icon: '🌙', label: 'Dinner', key: 'dinner' },
+      ];
+
+      document.getElementById('menuBox').innerHTML = `
+          <div class="meals-grid">
+            ${meals.map(m => `
+              <div class="meal-card">
+                <div class="meal-time">
+                  <span class="icon">${m.icon}</span>
+                  ${m.label}
+                </div>
+                <div class="meal-items">${data[m.key]}</div>
+              </div>
+            `).join('')}
+          </div>`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedMode = localStorage.getItem('mode');
+      const icon = document.getElementById('modeIcon');
+      if (savedMode === 'dark') {
+        document.body.classList.add('dark');
+        if (icon) icon.innerHTML = '🌙';
+      } else {
+        document.body.classList.remove('dark');
+        if (icon) icon.innerHTML = '☀️';
+      }
+    });
+
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      const icon = document.getElementById('modeIcon');
+      if (document.body.classList.contains('dark')) {
+        icon.innerHTML = '🌙';
+        localStorage.setItem('mode', 'dark');
+      } else {
+        icon.innerHTML = '☀️';
+        localStorage.setItem('mode', 'light');
+      }
+    }
+  </script>
+</body>
+
+</html>

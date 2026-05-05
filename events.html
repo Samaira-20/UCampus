@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Events – uCampus++</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="events.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="home.html" class="back-btn">←</a>
+
+    <span class="nav-title"> Events</span>
+
+    <div class="right-group">
+      <a href="home.html" class="home-btn">Home</a>
+      <span class="toggle" onclick="toggleMode()" id="modeIcon">☀️</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-label">What's Happening</div>
+      <h1>Campus Events </h1>
+      <p>Don't miss what's happening around you</p>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="searchInput" placeholder="Search events..." oninput="renderEvents()">
+      </div>
+      <div class="filter-chips">
+        <button class="chip active" onclick="setFilter('all',this)">All</button>
+        <button class="chip" onclick="setFilter('tech',this)">💻 Tech</button>
+        <button class="chip" onclick="setFilter('cultural',this)">🎭 Cultural</button>
+        <button class="chip" onclick="setFilter('sports',this)">⚽ Sports</button>
+        <button class="chip" onclick="setFilter('workshop',this)">🛠 Workshop</button>
+      </div>
+      <select class="sort-select" id="sortSelect" onchange="renderEvents()">
+        <option value="date">Sort: By Date</option>
+        <option value="name">Sort: By Name</option>
+      </select>
+    </div>
+
+    <!-- EVENTS GRID -->
+    <div class="events" id="eventsGrid"></div>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup" id="popup">
+    <div class="popup-box">
+      <button class="popup-close" onclick="closePopup()">✕</button>
+      <div class="popup-title">Register for Event</div>
+      <div class="popup-sub" id="popupEventName">Complete your registration below</div>
+      <form id="registerForm" onsubmit="submitForm(event)">
+        <div class="popup-field">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Your full name" required>
+        </div>
+        <div class="popup-field">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" required>
+        </div>
+        <div class="popup-field">
+          <label>Department</label>
+          <select id="regDept">
+            <option>CSE</option>
+            <option>ECE</option>
+            <option>ME</option>
+            <option>Civil</option>
+            <option>MBA</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <button type="submit" class="popup-submit">✓ Confirm Registration</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"> Registered successfully!</div>
+
+  <script>
+    // ── DATA ──
+    const eventsData = [
+      {
+        id: 1, title: 'Hackathon 2026', cat: 'tech',
+        date: '2026-05-10', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600',
+        desc: '48-hour coding challenge with amazing prizes and mentors from top tech companies.',
+        location: 'Block B, Lab 301', seats: '150 seats'
+      },
+      {
+        id: 2, title: 'Dance Competition', cat: 'cultural',
+        date: '2026-05-15', img: 'https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=600',
+        desc: 'Show your talent on the grand stage and win exciting rewards.',
+        location: 'Auditorium', seats: 'Open entry'
+      },
+      {
+        id: 3, title: 'Annual Sports Meet', cat: 'sports',
+        date: '2026-05-20', img: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600',
+        desc: 'Annual sports competition across all departments. Multiple categories.',
+        location: 'Sports Ground', seats: 'All welcome'
+      },
+      {
+        id: 4, title: 'AI & ML Workshop', cat: 'workshop',
+        date: '2026-05-25', img: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600',
+        desc: 'Hands-on workshop on machine learning basics and building your first model.',
+        location: 'Block A, Seminar Hall', seats: '80 seats'
+      },
+      {
+        id: 5, title: 'Music Night', cat: 'cultural',
+        date: '2026-06-01', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600',
+        desc: 'Annual music festival with performances from campus bands and solo artists.',
+        location: 'Open Air Theatre', seats: '500 seats'
+      },
+      {
+        id: 6, title: 'Web Dev Bootcamp', cat: 'workshop',
+        date: '2026-06-08', img: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
+        desc: 'Learn HTML, CSS, JavaScript and React in this intensive 2-day bootcamp.',
+        location: 'Computer Lab A', seats: '60 seats'
+      },
+    ];
+
+    let currentFilter = 'all';
+    let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+    let registeredEvents = JSON.parse(localStorage.getItem('registeredEvents')) || [];
+    let activeEventId = null;
+
+    function setFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderEvents();
+    }
+
+    function getDaysLeft(dateStr) {
+      const event = new Date(dateStr);
+      const now = new Date();
+      return Math.ceil((event - now) / (1000 * 60 * 60 * 24));
+    }
+
+    function renderEvents() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+
+      let filtered = eventsData.filter(e => {
+        const matchFilter = currentFilter === 'all' || e.cat === currentFilter;
+        const matchSearch = e.title.toLowerCase().includes(query) || e.desc.toLowerCase().includes(query);
+        return matchFilter && matchSearch;
+      });
+
+      if (sort === 'name') filtered.sort((a, b) => a.title.localeCompare(b.title));
+      else filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      const grid = document.getElementById('eventsGrid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="no-results"><div class="no-results-icon">🔍</div><div style="font-size:18px;font-weight:700;color:var(--text2)">No events found</div><div style="font-size:13px;margin-top:6px">Try a different search or filter</div></div>`;
+        return;
+      }
+
+      const catLabels = { tech: '💻 Tech', cultural: '🎭 Cultural', sports: '⚽ Sports', workshop: '🛠 Workshop' };
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      grid.innerHTML = filtered.map((e, i) => {
+        const days = getDaysLeft(e.date);
+        const d = new Date(e.date);
+        const dateStr = `${d.getDate()} ${months[d.getMonth()]}`;
+        const isReg = registeredEvents.includes(e.id);
+
+        let countdownHTML, countdownClass = '';
+        if (days > 0) {
+          countdownHTML = `⏳ ${days} day${days !== 1 ? 's' : ''} left`;
+          if (days <= 7) countdownClass = 'soon';
+        } else {
+          countdownHTML = '🔥 Happening Now / Passed'; countdownClass = 'passed';
+        }
+
+        return `
+          <div class="event-card" style="animation-delay:${i * 0.08}s" data-cat="${e.cat}">
+            <div class="event-img-wrap">
+              <span class="date-badge">📅 ${dateStr}</span>
+              <span class="cat-badge">${catLabels[e.cat] || e.cat}</span>
+              <img src="${e.img}" alt="${e.title}" loading="lazy">
+            </div>
+            <div class="event-body">
+              <h3>${e.title}</h3>
+              <p>${e.desc}</p>
+              <span class="countdown ${countdownClass}">${countdownHTML}</span>
+              <div class="event-footer">
+                <div class="event-meta">
+                  <span>📍 ${e.location}</span>
+                  <span>🪑 ${e.seats}</span>
+                </div>
+                <button class="reg-btn ${isReg ? 'registered' : ''}" onclick="openPopup(${e.id},'${e.title}')" ${isReg ? 'disabled' : ''}>
+                  ${isReg ? '✓ Registered' : 'Register'}
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function openPopup(id, title) {
+      activeEventId = id;
+      document.getElementById('popupEventName').textContent = `Registering for: ${title}`;
+      document.getElementById('popup').classList.add('show');
+    }
+
+    function closePopup() {
+      document.getElementById('popup').classList.remove('show');
+      document.getElementById('registerForm').reset();
+    }
+
+    // Close on backdrop click
+    document.getElementById('popup').addEventListener('click', e => {
+      if (e.target === document.getElementById('popup')) closePopup();
+    });
+
+    function submitForm(e) {
+      e.preventDefault();
+      const data = {
+        eventId: activeEventId,
+        name: document.getElementById('regName').value,
+        email: document.getElementById('regEmail').value,
+        dept: document.getElementById('regDept').value,
+        time: new Date().toLocaleString()
+      };
+      registrations.push(data);
+      registeredEvents.push(activeEventId);
+      localStorage.setItem('registrations', JSON.stringify(registrations));
+      localStorage.setItem('registeredEvents', JSON.stringify(registeredEvents));
+
+      closePopup();
+      showToast('✅ Registered successfully!');
+      renderEvents();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ── DARK MODE ──
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.getElementById('modeIcon').textContent = document.body.classList.contains('dark') ? '🌙' : '☀️';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('modeIcon').textContent = '🌙';
+    }
+
+    // ── INIT ──
+    renderEvents();
+    // Live countdown update
+    setInterval(renderEvents, 60000);
+  </script>
+</body>
+
+</html>

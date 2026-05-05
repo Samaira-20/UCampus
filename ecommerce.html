@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Welcome</title>
+  <link rel="stylesheet" href="ecommerce.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Welcome to Grocery Zone 🛒</h1>
+    <p>Redirecting you to your fresh essentials...</p>
+
+    <div class="loader"></div>
+
+    <button class="btn" onclick="goNow()">Go Now</button>
+  </div>
+
+  <script>
+    function goNow() {
+      window.location.href = "https://www.amazon.in/fresh";
+    }
+
+    setTimeout(() => {
+      window.location.href = "https://www.amazon.in/fresh";
+    }, 2000);
+  </script>
+
+</body>
+
+</html>
